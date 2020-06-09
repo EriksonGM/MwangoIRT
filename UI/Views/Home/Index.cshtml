@@ -1,0 +1,67 @@
+﻿@model CalcViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center mt-5">
+    <h1 class="display-4">Vamos tratar dos teus calculos</h1>
+    <p>Vamos ver quanto vais pagar agora que os <i class="text-danger">iluminados</i> da <strong>Assembleia Nacional</strong> votaram por aumentar o IRT.</p>
+</div>
+
+<div class="row  mt-5">
+    <form class="offset-3 col-6" asp-area="" asp-controller="Home" asp-action="Index">
+        <div class="input-group mb-3">
+            <input type="number" class="form-control" placeholder="Valor Total" aria-label="Valor Total" aria-describedby="button-addon2" min="0" required asp-for="@Model.Valor">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Calcular</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (Model != null)
+{
+
+    <div class="mt-5 row">
+        <table class="table table-borderless offset-3 col-6">
+            <tbody>
+                <tr class="text-right">
+                    <td><i>Valor</i></td>
+                    <td style="width: 150px">@Model.Valor.ToString("### ### ###.00 'kz'")</td>
+                </tr>
+                @if (Model.Valor < 70001)
+                {
+                    <tr class="text-right">
+                        <td><i>Isenção do pagamento</i></td>
+                        <td>-</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr class="text-right">
+                        <td><i>Parcela Fixa</i></td>
+                        <td>- @Model.Escalao.ParcelaFixa.ToString("### ### ###.00 'kz'")</td>
+                    </tr>
+                    <tr class="text-right">
+                        <td><i>Taxa (@Model.Escalao.Procentual% de @Model.ExcessoValor.ToString("### ### ###.00 'kz'")) </i></td>
+                        <td>- @Model.DescontoTaxa.ToString("### ### ###.00 'kz'")</td>
+                    </tr>
+                    <tr class="text-right border-top">
+                        <td><i>Desconto Total do IRT</i></td>
+                        <td>- @Model.IRT.ToString("### ### ###.00 'kz'")</td>
+                    </tr>
+                }
+
+                <tr class="text-right border-top font-weight-bold">
+                    <td><strong>Total</strong></td>
+                    <td>@Model.Resultado.ToString("### ### ###.00 'kz'")</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+}
+
+<style>
+</style>
