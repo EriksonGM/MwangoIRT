@@ -49,7 +49,7 @@ namespace UI
             {
                 return new Escalao
                 {
-                    ParcelaFixa = 0,
+                    ParcelaFixa = 12250,
                     Procentual = 16,
                     Excesso = 150000
                 };
@@ -59,9 +59,9 @@ namespace UI
             {
                 return new Escalao
                 {
-                    ParcelaFixa = 0,
+                    ParcelaFixa = 31250,
                     Procentual = 18,
-                    Excesso = 0,
+                    Excesso = 200000
                 };
             }
 
