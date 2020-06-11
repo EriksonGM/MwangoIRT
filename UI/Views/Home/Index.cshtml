@@ -1,15 +1,15 @@
-﻿@model CalcViewModel
+﻿@model CalculoViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center mt-5">
     <h1 class="display-4">Vamos tratar dos teus calculos</h1>
-    <p>Vamos ver quanto vais pagar agora que os <i class="text-danger">iluminados</i> da <strong>Assembleia Nacional</strong> votaram por aumentar o IRT.</p>
+    <p class="h4">Vamos ver quanto vais pagar agora que os <i class="text-danger">iluminados</i> da <strong>Assembleia Nacional</strong> votaram por aumentar o IRT.</p>
 </div>
 
 <div class="row  mt-5">
-    <form class="offset-3 col-6" asp-area="" asp-controller="Home" asp-action="Index">
+    <form class="offset-md-3 col-md-6" asp-area="" asp-controller="Home" asp-action="Index">
         <div class="input-group mb-3">
             <input type="number" class="form-control" placeholder="Valor Total" aria-label="Valor Total" aria-describedby="button-addon2" min="0" required asp-for="@Model.Valor">
             <div class="input-group-append">
@@ -21,51 +21,94 @@
 
 @if (Model != null)
 {
-
-    <div class="mt-5 row">
-        <table class="table table-borderless offset-3 col-6">
+<div class="mt-5 row">
+    <table class="table table-borderless offset-md-3 col-md-6 col-sm-12 ">
+        <tbody>
+            <tr class="text-right table-success font-weight-bold">
+                <td><i>Valor</i></td>
+                <td colspan="2" style="width: 150px">@Model.Valor.ToKwanza()</td>
+            </tr>
+            <tr class="text-right border-top border-bottom font-weight-bold">
+                <td><i>Segurança Social (3%)</i></td>
+                <td colspan="2">@Model.SegurancaSocial.ToNegative().ToKwanza()</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="text-center">Antigo</td>
+                <td class="text-center">Actual</td>
+            </tr>
+            <tr class="text-right ">
+                <td>Parcela Fixa</td>
+                <td>@Model.CalculoAntigo.Escalao.ParcelaFixa.ToKwanza()</td>
+                <td>@Model.CalculoActual.Escalao.ParcelaFixa.ToKwanza()</td>
+            </tr>
+            <tr class="text-right ">
+                <td>Taxa</td>
+                <td>@Model.CalculoAntigo.DescontoTaxa.ToKwanza()</td>
+                <td>@Model.CalculoActual.DescontoTaxa.ToKwanza()</td>
+            </tr>
+            <tr class="text-right font-weight-bold">
+                <td>Desconto Total do IRT</td>
+                <td>@Model.CalculoAntigo.TotalIRT.ToNegative().ToKwanza()</td>
+                <td>@Model.CalculoActual.TotalIRT.ToNegative().ToKwanza()</td>
+            </tr>
+            <tr class="text-right border-top font-weight-bold table-danger">
+                <td>Salario</td>
+                <td>@Model.CalculoAntigo.Salario.ToKwanza()</td>
+                <td>@Model.CalculoActual.Salario.ToKwanza()</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<h3 class="text-center mt-5 mb-5">
+    Diferença: @((Model.CalculoAntigo.Salario - Model.CalculoActual.Salario).ToKwanza())
+</h3>
+@*<div class="mt-5 row">
+        <table class="table table-borderless offset-md-3 col-md-6 col-sm-12">
             <tbody>
                 <tr class="text-right">
                     <td><i>Valor</i></td>
                     <td style="width: 150px">@Model.Valor.ToString("### ### ###.00 'kz'")</td>
                 </tr>
-                @if (Model.Valor < 70001)
+                <tr class="text-right border-top border-bottom">
+                    <td><i>Segurança Social (3%)</i></td>
+                    <td>- @Model.SegurancaSocial.ToString("### ### ###.00 'kz'")</td>
+                </tr>
+                @if (Model.Escalao.Porcentual == 0)
                 {
-                    <tr class="text-right">
+                    <tr class="text-right ">
                         <td><i>Isenção do pagamento</i></td>
                         <td>-</td>
                     </tr>
                 }
                 else
                 {
-                    <tr class="text-right">
+
+                    <tr class="text-right border-top">
                         <td><i>Parcela Fixa</i></td>
                         <td>- @Model.Escalao.ParcelaFixa.ToString("### ### ###.00 'kz'")</td>
                     </tr>
                     <tr class="text-right">
-                        <td><i>Taxa (@Model.Escalao.Procentual% de @Model.ExcessoValor.ToString("### ### ###.00 'kz'")) </i></td>
+                        <td><i>Taxa (@Model.Escalao.Porcentual% de @Model.ExcessoValor.ToString("### ### ###.00 'kz'")) </i></td>
                         <td>- @Model.DescontoTaxa.ToString("### ### ###.00 'kz'")</td>
                     </tr>
-                    <tr class="text-right border-top">
+                    <tr class="text-right  border-bottom">
                         <td><i>Desconto Total do IRT</i></td>
                         <td>- @Model.IRT.ToString("### ### ###.00 'kz'")</td>
                     </tr>
                 }
-
-                <tr class="text-right border-top font-weight-bold">
+                <tr class="text-right border-top font-weight-bold table-danger">
                     <td><strong>Total</strong></td>
                     <td>@Model.Resultado.ToString("### ### ###.00 'kz'")</td>
                 </tr>
             </tbody>
-
         </table>
-
-    </div>
+    </div>*@
 }
 <div class="row">
-    <img src="~/img/tabelairt.jpg" class="col-12"/>
+    @*<img src="~/img/tabelairt.jpg" class="col-12" />*@
     <p class="text-center col-12">
-        <a target="_blank" href="http://jornaldeangola.sapo.ao/economia/novo-codigo-do-irt-saiu-melhor-do-que-entrou-no-parlamento">Link ao Jornal de Angola com a publicação oficial.</a>
+        <a target="_blank" href="http://jornaldeangola.sapo.ao/economia/novo-codigo-do-irt-saiu-melhor-do-que-entrou-no-parlamento">Link a publicação no Jornal de Angola.</a>
     </p>
 </div>
 

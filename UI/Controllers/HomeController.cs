@@ -26,17 +26,55 @@ namespace UI.Controllers
         [HttpPost]
         public IActionResult Index([FromForm] double valor)
         {
-            var escalao = new Procesador().CalculaEscalao(valor-1);
+            var proc = new Procesador();
 
-            return View(new CalcViewModel
+            var descontoSS = proc.CalcularSS(valor);
+            /*
+                        var escalao = proc.CalculaEscalao(valor - descontoSS);
+
+                        var escalaoAntigo = proc.CalculaEscalao(valor - descontoSS);
+
+                        var calc = new CalcViewModel
+                        {
+
+                            Valor = valor,
+                            SegurancaSocial = descontoSS,
+                            Escalao = escalao,
+                            AntigoEscalao = escalaoAntigo,
+                            //Resultado = 
+                            //ExcessoValor = valor - descontoSS - escalao.Excesso,
+                            //DescontoTaxa = (valor - escalao.Excesso) * (escalao.Procentual / 100),
+                            //IRT = (valor - escalao.Excesso) * (escalao.Procentual / 100) + escalao.ParcelaFixa,
+                            //Resultado = valor - ((valor - escalao.Excesso) * (escalao.Procentual / 100) + escalao.ParcelaFixa) - descontoSS
+                        };
+
+                        valor -= descontoSS;
+
+                        calc.ExcessoValor = valor - escalao.Excesso;
+
+                        calc.DescontoTaxa = (valor - escalao.Excesso) * (escalao.Porcentual / 100);
+
+                        calc.IRT = (valor - escalao.Excesso) * (escalao.Porcentual / 100) + escalao.ParcelaFixa;
+
+                        calc.Resultado = valor - ((valor - escalao.Excesso) * (escalao.Porcentual / 100) + escalao.ParcelaFixa);
+            */
+
+            var valorColetavel = valor - descontoSS;
+
+            var escalaoAntigo = proc.CalcularEscalaoAntigo(valorColetavel);
+            var escalaoActual = proc.CalculaEscalaoActual(valorColetavel);
+
+            var calculo = new CalculoViewModel
             {
-                Escalao = escalao,
                 Valor = valor,
-                ExcessoValor = valor - escalao.Excesso,
-                DescontoTaxa = (valor-escalao.Excesso) * (escalao.Procentual/100),
-                IRT = (valor - escalao.Excesso) * (escalao.Procentual / 100) + escalao.ParcelaFixa,
-                Resultado = valor - ((valor - escalao.Excesso) * (escalao.Procentual / 100) + escalao.ParcelaFixa)
-            });
+                SegurancaSocial = descontoSS,
+                CalculoActual = proc.CalcularIRT(valorColetavel, escalaoActual),
+                CalculoAntigo = proc.CalcularIRT(valorColetavel, escalaoAntigo)
+            };
+
+
+
+            return View(calculo);
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -44,6 +82,6 @@ namespace UI.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        
+
     }
 }

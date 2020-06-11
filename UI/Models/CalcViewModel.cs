@@ -9,6 +9,7 @@ namespace UI.Models
     {
         public Escalao Escalao { get; set; }
 
+        public Escalao AntigoEscalao { get; set; }
         public double Valor { get; set; }
 
         public double DescontoTaxa { get; set; }
@@ -18,5 +19,7 @@ namespace UI.Models
         public double IRT { get; set; }
 
         public double Resultado { get; set; }
+
+        public double SegurancaSocial { get; set; }
     }
 }
